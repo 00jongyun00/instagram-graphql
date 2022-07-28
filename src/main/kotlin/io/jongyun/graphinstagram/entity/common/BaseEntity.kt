@@ -18,6 +18,6 @@ abstract class BaseTimeEntity {
 
     @LastModifiedDate
     @Column(nullable = false)
-    var modifiedAt: LocalDateTime = LocalDateTime.now()
+    var updatedAt: LocalDateTime = LocalDateTime.now()
         protected set
 }

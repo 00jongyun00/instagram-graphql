@@ -1,7 +1,12 @@
 type Member {
     id: ID!
-    username: String!
+    name: String!
     password: String!
     createdAt: DateTime!
     updatedAt: DateTime!
+}
+
+input MemberCreateInput {
+    name: String!
+    password: String!
 }

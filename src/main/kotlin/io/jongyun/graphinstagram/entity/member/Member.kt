@@ -7,12 +7,12 @@ import javax.persistence.*
 @Entity
 @Table(name = "member")
 class Member(
-    var username: String,
+    var name: String,
     var password: String
 ): BaseTimeEntity() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = null
+    var id: Long? = null
         protected set
 }

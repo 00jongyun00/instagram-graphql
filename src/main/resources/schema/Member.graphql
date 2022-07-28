@@ -1,0 +1,7 @@
+type Member {
+    id: ID!
+    username: String!
+    password: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}

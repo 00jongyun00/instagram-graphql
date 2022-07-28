@@ -1,1 +1,5 @@
 scalar DateTime
+
+type Query {
+    memberCreate(memberCreateInput: MemberCreateInput!): Boolean!
+}

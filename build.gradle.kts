@@ -20,6 +20,8 @@ group = "io.jongyun"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
+val kotestVersion = "4.6.0"
+
 repositories {
     mavenCentral()
 }
@@ -43,6 +45,16 @@ dependencies {
     implementation("com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter")
     implementation("com.netflix.graphql.dgs:graphql-dgs-extended-scalars")
     implementation("com.netflix.graphql.dgs:graphql-dgs-subscriptions-websockets-autoconfigure")
+
+    // kotest
+    testImplementation("io.kotest:kotest-runner-junit5:${kotestVersion}")
+    testImplementation("io.kotest:kotest-assertions-core:${kotestVersion}")
+    testImplementation("io.kotest:kotest-property:${kotestVersion}")
+    testImplementation("io.kotest:kotest-framework-datatest:${kotestVersion}")
+    testImplementation("io.kotest:kotest-extensions-spring:4.4.3")
+
+    // https://mvnrepository.com/artifact/io.mockk/mockk
+    testImplementation("io.mockk:mockk:1.12.4")
 }
 
 tasks.withType<KotlinCompile> {

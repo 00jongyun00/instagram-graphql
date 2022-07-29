@@ -1,0 +1,14 @@
+"""게시물 schema"""
+type Post {
+    id: ID!
+    createdBy: Member!
+    content: String!
+    postComments: [PostComment!]
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+"""게시물 생성 schema"""
+input CreatePostInput {
+    content: String!
+}

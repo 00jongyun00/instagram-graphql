@@ -6,7 +6,7 @@ type Member {
     updatedAt: DateTime!
 }
 
-input MemberCreateInput {
+input MemberRegisterInput {
     name: String!
     password: String!
 }

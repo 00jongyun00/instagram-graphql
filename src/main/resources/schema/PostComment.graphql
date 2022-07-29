@@ -1,0 +1,13 @@
+type PostComment {
+    id: ID!
+    post: Post!
+    createdBy: Member!
+    content: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+input createdPostCommentInput {
+    postId: ID!
+    content: String!
+}

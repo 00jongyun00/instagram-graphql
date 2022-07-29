@@ -11,10 +11,12 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 internal class MemberServiceTest() : FeatureSpec({
     val memberRepository = mockk<MemberRepository>()
-    val memberService = MemberService(memberRepository)
+    val encoder = mockk<BCryptPasswordEncoder>()
+    val memberService = MemberService(memberRepository, encoder)
 
     feature("registry member account") {
         val input = MemberRegisterInput("jongyun", "password")

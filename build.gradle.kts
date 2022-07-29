@@ -46,6 +46,8 @@ dependencies {
     implementation("com.netflix.graphql.dgs:graphql-dgs-extended-scalars")
     implementation("com.netflix.graphql.dgs:graphql-dgs-subscriptions-websockets-autoconfigure")
 
+    implementation("org.springframework.boot:spring-boot-starter-security:2.7.2")
+
     // kotest
     testImplementation("io.kotest:kotest-runner-junit5:${kotestVersion}")
     testImplementation("io.kotest:kotest-assertions-core:${kotestVersion}")

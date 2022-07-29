@@ -5,12 +5,14 @@ import io.jongyun.graphinstagram.entity.member.MemberRepository
 import io.jongyun.graphinstagram.exception.BusinessException
 import io.jongyun.graphinstagram.exception.ErrorCode
 import io.jongyun.graphinstagram.types.MemberRegisterInput
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class MemberService(
-    private val memberRepository: MemberRepository
+    private val memberRepository: MemberRepository,
+    private val encoder: BCryptPasswordEncoder
 ) {
 
     @Transactional
@@ -22,6 +24,7 @@ class MemberService(
             )
         }
         val registryMember = mapToEntity(memberRegisterInput)
+        encoder.encode(registryMember.password).also { registryMember.password = it }
         memberRepository.save(registryMember)
         return true
     }

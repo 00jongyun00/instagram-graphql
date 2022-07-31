@@ -10,3 +10,13 @@ input MemberRegisterInput {
     name: String!
     password: String!
 }
+
+type MemberLoginResponse {
+    jwtToken: String!
+}
+
+
+input MemberLoginInput {
+    name: String!
+    password: String!
+}

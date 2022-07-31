@@ -39,7 +39,7 @@ class JwtTokenProvider(
             .compact()
     }
 
-    fun getAuthentication(token: String): UsernamePasswordAuthenticationToken {
+    fun getAuthentication(token: String): Authentication {
         val claims = parseClaims(token)
         val authorities = claims[CLAIM_AUTHORITIES_KEY].toString().split(",").map { SimpleGrantedAuthority(it) }
         val principal = User(claims.subject, "", authorities)
@@ -52,5 +52,11 @@ class JwtTokenProvider(
 
     fun resolveToken(request: HttpServletRequest): String? {
         return request.getHeader("Authorization")
+    }
+
+    fun validation(token: String): Boolean {
+        val claims = parseClaims(token)
+        val exp = claims.expiration
+        return exp.after(Date())
     }
 }

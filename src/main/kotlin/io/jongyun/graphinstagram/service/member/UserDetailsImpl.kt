@@ -9,11 +9,12 @@ class UserDetailsImpl(val member: Member) : UserDetails {
 
     var enabled: Boolean = true
 
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority> = AuthorityUtils.createAuthorityList()
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority> =
+        AuthorityUtils.createAuthorityList("ROLE_USER")
 
     override fun getPassword(): String = member.password
 
-    override fun getUsername(): String = member.password
+    override fun getUsername(): String = member.name
 
     override fun isAccountNonExpired(): Boolean = enabled
 

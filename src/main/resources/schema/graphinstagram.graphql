@@ -1,5 +1,8 @@
 scalar DateTime
 
+type Query {
+    me: Member!
+}
 
 type Mutation {
     memberRegister(memberRegisterInput: MemberRegisterInput!): Boolean!

@@ -20,10 +20,8 @@ class JwtFilter(private val jwtTokenProvider: JwtTokenProvider) : OncePerRequest
             request.getHeader("Authorization") ?: return filterChain.doFilter(request, response)
         val token = authorizationHeader?.substring("Bearer ".length) ?: return filterChain.doFilter(request, response)
 
-        // 토큰 검증
         if (jwtTokenProvider.validation(token)) {
-            val username = jwtTokenProvider.parseClaims(token).subject
-            val authentication = jwtTokenProvider.getAuthentication(username)
+            val authentication = jwtTokenProvider.getAuthentication(token)
             SecurityContextHolder.getContext().authentication = authentication
         }
 

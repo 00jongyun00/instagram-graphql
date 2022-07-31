@@ -80,4 +80,8 @@ tasks.withType<com.netflix.graphql.dgs.codegen.gradle.GenerateJavaTask> {
     generateDataTypes = true
     snakeCaseConstantNames = true
     language = "kotlin"
+
+    typeMapping = mutableMapOf(
+        "DateTime" to "java.time.LocalDateTime"
+    )
 }

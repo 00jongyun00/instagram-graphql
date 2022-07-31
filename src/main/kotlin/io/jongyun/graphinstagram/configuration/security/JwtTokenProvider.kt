@@ -28,7 +28,7 @@ class JwtTokenProvider(
 
     fun createToken(authentication: Authentication): String {
         val now = Date()
-        val authoritiesString = authentication.authorities.joinToString { "," }
+        val authoritiesString = authentication.authorities.joinToString(",")
         return Jwts.builder()
             .setSubject(authentication.name)
             .claim(CLAIM_JWT_TYPE_KEY, BEARER_TYPE)
@@ -41,7 +41,8 @@ class JwtTokenProvider(
 
     fun getAuthentication(token: String): Authentication {
         val claims = parseClaims(token)
-        val authorities = claims[CLAIM_AUTHORITIES_KEY].toString().split(",").map { SimpleGrantedAuthority(it) }
+        val authorities =
+            claims[CLAIM_AUTHORITIES_KEY]?.toString()?.split(",")?.map { SimpleGrantedAuthority(it) } ?: emptyList()
         val principal = User(claims.subject, "", authorities)
         return UsernamePasswordAuthenticationToken(principal, token, authorities)
     }

@@ -3,3 +3,6 @@ dgs:
     graphiql:
       enabled: true
     path: /graphql/**
+
+jwt:
+  key: 3f0dc726-5938-4fce-9246-a9d8af978ee23f0dc726-5938-4fce-9246-a9d8af978ee23f0dc726-5938-4fce-9246-a9d8af978ee2

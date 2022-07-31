@@ -20,7 +20,7 @@ group = "io.jongyun"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
-val kotestVersion = "4.6.0"
+val kotestVersion = "5.3.1"
 
 repositories {
     mavenCentral()
@@ -47,6 +47,11 @@ dependencies {
     implementation("com.netflix.graphql.dgs:graphql-dgs-subscriptions-websockets-autoconfigure")
 
     implementation("org.springframework.boot:spring-boot-starter-security:2.7.2")
+
+    // jwt
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
     // kotest
     testImplementation("io.kotest:kotest-runner-junit5:${kotestVersion}")

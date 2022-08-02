@@ -60,6 +60,11 @@ dependencies {
     testImplementation("io.kotest:kotest-framework-datatest:${kotestVersion}")
     testImplementation("io.kotest:kotest-extensions-spring:4.4.3")
 
+    implementation("com.github.javafaker:javafaker:1.+")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8")
+
     // https://mvnrepository.com/artifact/io.mockk/mockk
     testImplementation("io.mockk:mockk:1.12.4")
 }

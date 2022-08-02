@@ -5,6 +5,7 @@ type Query {
     getPost(postId: ID!): Post!
     myPostList: [Post!]
     myLikedPostList: [Post!]
+    shows(titleFilter: String): [Show]
 }
 
 type Mutation {
@@ -13,4 +14,27 @@ type Mutation {
     postCreate(createPostInput: CreatePostInput!): Boolean!
     postUpdate(updatePostInput: UpdatePostInput!): Boolean!
     postLike(likePostInput: LikePostInput!): Boolean!
+}
+
+# example
+type Show {
+    id: Int!
+    title(format: TitleFormat): String!
+    releaseYear: Int
+    reviews: [Review]
+    artwork: [Image]
+}
+
+input TitleFormat {
+    uppercase: Boolean
+}
+
+type Review {
+    username: String
+    starScore: Int
+    submittedDate: DateTime
+}
+
+type Image {
+    url: String
 }

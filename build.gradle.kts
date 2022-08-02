@@ -20,7 +20,7 @@ group = "io.jongyun"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
-val kotestVersion = "5.3.1"
+val kotestVersion = "4.6.0"
 
 repositories {
     mavenCentral()
@@ -60,6 +60,11 @@ dependencies {
     testImplementation("io.kotest:kotest-framework-datatest:${kotestVersion}")
     testImplementation("io.kotest:kotest-extensions-spring:4.4.3")
 
+    implementation("com.github.javafaker:javafaker:1.+")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8")
+
     // https://mvnrepository.com/artifact/io.mockk/mockk
     testImplementation("io.mockk:mockk:1.12.4")
 }
@@ -81,7 +86,5 @@ tasks.withType<com.netflix.graphql.dgs.codegen.gradle.GenerateJavaTask> {
     snakeCaseConstantNames = true
     language = "kotlin"
 
-    typeMapping = mutableMapOf(
-        "DateTime" to "java.time.LocalDateTime"
-    )
+    typeMapping = mutableMapOf()
 }

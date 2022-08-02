@@ -1,3 +1,6 @@
+server:
+  port: 9000
+
 dgs:
   graphql:
     graphiql:

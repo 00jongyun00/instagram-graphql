@@ -1,16 +1,16 @@
 package io.jongyun.graphinstagram.service.member
 
 import io.jongyun.graphinstagram.configuration.security.JwtTokenProvider
-import io.jongyun.graphinstagram.entity.member.Member
 import io.jongyun.graphinstagram.entity.member.MemberRepository
 import io.jongyun.graphinstagram.exception.BusinessException
 import io.jongyun.graphinstagram.exception.ErrorCode
 import io.jongyun.graphinstagram.types.MemberLoginInput
+import io.jongyun.graphinstagram.util.getMemberByContext
+import io.jongyun.graphinstagram.util.mapToGraphql
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -27,7 +27,6 @@ class MemberAuthService(
     @Transactional(readOnly = true)
     fun login(memberLoginInput: MemberLoginInput): String {
         try {
-            getMemberByContext(memberLoginInput.name)
             val authenticationToken =
                 UsernamePasswordAuthenticationToken(memberLoginInput.name, memberLoginInput.password)
 
@@ -42,17 +41,9 @@ class MemberAuthService(
 
     @Transactional(readOnly = true)
     fun findMyInfo(): TypesMember {
-        val name = SecurityContextHolder.getContext().authentication.name
-        val member = getMemberByContext(name)
-        return TypesMember(member.id.toString(), member.name, member.createdAt, member.updatedAt)
+        val member = getMemberByContext(memberRepository)
+        return mapToGraphql(member)
     }
 
-    private fun getMemberByContext(memberName: String): Member {
-        return memberRepository.findByName(memberName)
-            ?: throw BusinessException(
-                ErrorCode.MEMBER_DOES_NOT_EXISTS,
-                "계정을 찾을수 없습니다. name = $memberName"
-            )
-    }
 
 }

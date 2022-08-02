@@ -4,11 +4,18 @@ type Post {
     createdBy: Member!
     content: String!
     postComments: [PostComment!]
+    members: [Member!]
     createdAt: DateTime!
     updatedAt: DateTime!
 }
 
 """게시물 생성 schema"""
 input CreatePostInput {
+    content: String!
+}
+
+"""게시물 Update schema"""
+input UpdatePostInput {
+    postId: ID!
     content: String!
 }

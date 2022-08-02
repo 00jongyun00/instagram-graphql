@@ -11,6 +11,6 @@ fun getMemberByContext(memberRepository: MemberRepository): Member {
     return memberRepository.findByName(name)
         ?: throw BusinessException(
             ErrorCode.MEMBER_DOES_NOT_EXISTS,
-            "계정을 찾을수 없습니다. name = $name"
+            "계정을 찾을수 없습니다. name = $"
         )
 }

@@ -44,6 +44,11 @@ class PostService(
     }
 
     @Transactional(readOnly = true)
+    fun getAll(): List<TypesPost> {
+        return postRepository.findAll().map { mapToGraphql(it) }
+    }
+
+    @Transactional(readOnly = true)
     fun getMyPosts(): List<TypesPost> {
         return postRepository.findByCreatedBy(getMemberByContext(memberRepository))
             .map { mapToGraphql(it) }

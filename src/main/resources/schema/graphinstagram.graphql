@@ -4,6 +4,7 @@ type Query {
     me: Member!
     getPost(postId: ID!): Post!
     myPostList: [Post!]
+    myLikedPostList: [Post!]
 }
 
 type Mutation {
@@ -11,4 +12,5 @@ type Mutation {
     memberLogin(memberLoginInput: MemberLoginInput!): MemberLoginResponse!
     postCreate(createPostInput: CreatePostInput!): Boolean!
     postUpdate(updatePostInput: UpdatePostInput!): Boolean!
+    postLike(likePostInput: LikePostInput!): Boolean!
 }

@@ -3,6 +3,7 @@ package io.jongyun.graphinstagram.entity.post
 import io.jongyun.graphinstagram.entity.common.BaseTimeEntity
 import io.jongyun.graphinstagram.entity.member.Member
 import javax.persistence.*
+import javax.persistence.CascadeType.ALL
 import javax.persistence.FetchType.LAZY
 
 @Entity
@@ -18,4 +19,12 @@ class Post(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
         protected set
+
+    @OneToMany(mappedBy = "post", cascade = [ALL], orphanRemoval = true)
+    val postLikeList: MutableList<PostLikes> = mutableListOf()
+
+    fun addLike(member: Member) {
+        val postLikes = PostLikes(this, member)
+        postLikeList.add(postLikes)
+    }
 }

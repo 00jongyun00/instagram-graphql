@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface PostRepository : JpaRepository<Post, Long> {
     fun findByCreatedByAndId(createdBy: Member, id: Long): Post?
+
+    fun findByCreatedBy(createdBy: Member): List<Post>
 }

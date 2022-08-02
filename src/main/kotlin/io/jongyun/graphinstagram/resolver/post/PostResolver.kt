@@ -16,4 +16,9 @@ class PostResolver(
     fun getPost(@InputArgument postId: Long): Post {
         return postService.getPost(postId)
     }
+
+    @DgsData(parentType = DgsConstants.QUERY_TYPE, field = DgsConstants.QUERY.MyPostList)
+    fun getMyPosts(): List<Post> {
+        return postService.getMyPosts()
+    }
 }

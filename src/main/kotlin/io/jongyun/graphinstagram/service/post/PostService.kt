@@ -43,6 +43,12 @@ class PostService(
         return mapToGraphql(post)
     }
 
+    @Transactional(readOnly = true)
+    fun getMyPosts(): List<TypesPost> {
+        return postRepository.findByCreatedBy(getMemberByContext(memberRepository))
+            .map { mapToGraphql(it) }
+    }
+
     fun updatePost(updatePostInput: UpdatePostInput): Boolean {
         val post =
             postRepository.findByCreatedByAndId(getMemberByContext(memberRepository), updatePostInput.postId.toLong())

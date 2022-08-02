@@ -6,6 +6,7 @@ import io.jongyun.graphinstagram.exception.BusinessException
 import io.jongyun.graphinstagram.exception.ErrorCode
 import io.jongyun.graphinstagram.types.MemberLoginInput
 import io.jongyun.graphinstagram.util.getMemberByContext
+import io.jongyun.graphinstagram.util.mapToGraphql
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -41,7 +42,7 @@ class MemberAuthService(
     @Transactional(readOnly = true)
     fun findMyInfo(): TypesMember {
         val member = getMemberByContext(memberRepository)
-        return TypesMember(member.id.toString(), member.name, member.createdAt, member.updatedAt)
+        return mapToGraphql(member)
     }
 
 

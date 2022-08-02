@@ -9,15 +9,13 @@ import javax.persistence.FetchType.LAZY
 @Table(name = "post")
 class Post(
     @Column(name = "content", length = 100)
-    var content: String
+    var content: String,
+    @ManyToOne(fetch = LAZY) @JoinColumn(name = "created_by_id")
+    val createdBy: Member
 ) : BaseTimeEntity() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
         protected set
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "created_by_id")
-    var createdBy: Member? = null
 }

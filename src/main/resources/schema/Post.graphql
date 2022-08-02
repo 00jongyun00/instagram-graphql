@@ -12,3 +12,9 @@ type Post {
 input CreatePostInput {
     content: String!
 }
+
+"""게시물 Update schema"""
+input UpdatePostInput {
+    postId: ID!
+    content: String!
+}

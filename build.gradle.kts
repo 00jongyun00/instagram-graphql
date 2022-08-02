@@ -20,7 +20,7 @@ group = "io.jongyun"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
-val kotestVersion = "5.3.1"
+val kotestVersion = "4.6.0"
 
 repositories {
     mavenCentral()

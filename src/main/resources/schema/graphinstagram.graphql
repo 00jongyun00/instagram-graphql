@@ -2,9 +2,13 @@ scalar DateTime
 
 type Query {
     me: Member!
+    getPost(postId: ID!): Post!
+    myPostList: [Post!]
 }
 
 type Mutation {
     memberRegister(memberRegisterInput: MemberRegisterInput!): Boolean!
     memberLogin(memberLoginInput: MemberLoginInput!): MemberLoginResponse!
+    postCreate(createPostInput: CreatePostInput!): Boolean!
+    postUpdate(updatePostInput: UpdatePostInput!): Boolean!
 }

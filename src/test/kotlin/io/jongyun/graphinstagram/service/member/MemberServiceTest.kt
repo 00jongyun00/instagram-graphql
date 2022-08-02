@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
-internal class MemberServiceTest() : FeatureSpec({
+internal class MemberServiceTest : FeatureSpec({
     val memberRepository = mockk<MemberRepository>()
     val encoder = mockk<BCryptPasswordEncoder>()
     val memberService = MemberService(memberRepository, encoder)

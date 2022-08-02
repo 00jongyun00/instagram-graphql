@@ -1,4 +1,4 @@
-package io.jongyun.graphinstagram.fetcher
+package io.jongyun.graphinstagram.fetcher.member
 
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsData

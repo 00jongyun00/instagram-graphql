@@ -4,7 +4,6 @@ type Post {
     createdBy: Member!
     content: String!
     postComments: [PostComment!]
-    members: [Member!]
     createdAt: DateTime!
     updatedAt: DateTime!
 }

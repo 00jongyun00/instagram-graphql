@@ -27,9 +27,9 @@ import kotlinx.coroutines.coroutineScope
 class ShowsDataFetcher(private val showsService: ShowsService) {
 
     /**
-     * This datafetcher resolves the `shows` field on Query.
-     * It uses an @InputArgument to get the titleFilter from the Query if one is defined.
-     * As an implementation detail, it leverages Kotlin Coroutines as an output type.
+     * 이 datafetcher는 쿼리의 'shows' 필드를 확인합니다.
+     * @InputArgument를 사용하여 정의된 경우 쿼리에서 titleFilter 를 가져옵니다.
+     * 구현 세부 사항으로 Kotlin Coroutine을 출력 유형으로 활용합니다.
      *
      */
     @DgsQuery

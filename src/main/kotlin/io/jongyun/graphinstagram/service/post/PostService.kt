@@ -1,5 +1,6 @@
 package io.jongyun.graphinstagram.service.post
 
+import io.jongyun.graphinstagram.entity.member.Member
 import io.jongyun.graphinstagram.entity.member.MemberRepository
 import io.jongyun.graphinstagram.entity.post.Post
 import io.jongyun.graphinstagram.entity.post.PostRepository
@@ -21,16 +22,16 @@ class PostService(
     private val memberRepository: MemberRepository
 ) {
 
-    fun createPost(createPostInput: CreatePostInput): Boolean {
+    fun createPost(memberId: Long, createPostInput: CreatePostInput): Boolean {
         contentValidation(createPostInput.content)
+        val member = member(memberId)
         val post = Post(
-            createdBy = getMemberByContext(memberRepository),
+            createdBy = member,
             content = createPostInput.content
         )
         postRepository.save(post)
         return true
     }
-
 
     @Transactional(readOnly = true)
     fun getPost(postId: Long): TypesPost {
@@ -74,6 +75,13 @@ class PostService(
             content.length > 100 ->
                 throw BusinessException(ErrorCode.CONTENT_MUST_BE_100_LENGTH_OR_LESS, "컨텐츠 내용은 100자 이하여야 합니다.")
         }
+    }
+
+    private fun member(memberId: Long): Member {
+        val member = memberRepository.findById(memberId).orElseThrow {
+            BusinessException(ErrorCode.MEMBER_DOES_NOT_EXISTS, "계정을 찾을 수 없습니다.")
+        }
+        return member
     }
 
 }

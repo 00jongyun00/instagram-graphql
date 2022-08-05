@@ -1,6 +1,7 @@
 type Member {
     id: ID!
     name: String!
+    posts: [Post!]
     createdAt: DateTime!
     updatedAt: DateTime!
 }

@@ -29,7 +29,7 @@ class MemberDataFetcher(
         return MemberLoginResponse(jwtToken)
     }
 
-    @DgsData(parentType = DgsConstants.POST.TYPE_NAME, field = DgsConstants.POST.Members)
+    @DgsData(parentType = DgsConstants.POST.TYPE_NAME, field = DgsConstants.POST.CreatedBy)
     fun members(dfe: DgsDataFetchingEnvironment): CompletableFuture<List<Member>> {
         // DataLoader 를 이름으로 로드하는 대신 DgsDataFetchingEnvironment 를 사용하고 DataLoader 클래스 이름을 전달할 수 있습니다.
         val membersDataLoader: DataLoader<Long, List<Member>> = dfe.getDataLoader(MembersDataLoader::class.java)

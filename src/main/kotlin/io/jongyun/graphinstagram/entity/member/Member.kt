@@ -1,7 +1,6 @@
 package io.jongyun.graphinstagram.entity.member
 
 import io.jongyun.graphinstagram.entity.common.BaseTimeEntity
-import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
@@ -9,7 +8,7 @@ import javax.persistence.*
 class Member(
     var name: String,
     var password: String
-): BaseTimeEntity() {
+) : BaseTimeEntity() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

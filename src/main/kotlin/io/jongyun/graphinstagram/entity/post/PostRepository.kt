@@ -9,4 +9,6 @@ interface PostRepository : JpaRepository<Post, Long> {
     fun findByCreatedByAndId(createdBy: Member, id: Long): Post?
 
     fun findByCreatedBy(createdBy: Member): List<Post>
+
+    fun findByIdIn(ids: List<Long>): List<Post>
 }

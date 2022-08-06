@@ -39,7 +39,7 @@ class PostDataFetcher(
 
     @DgsData(parentType = DgsConstants.Mutation_TYPE, field = DgsConstants.MUTATION.PostUpdate)
     fun updatePost(@InputArgument updatePostInput: UpdatePostInput): Boolean {
-        return postService.updatePost(updatePostInput)
+        return postService.updatePost(getAuthName(), updatePostInput)
     }
 
     @DgsData(parentType = DgsConstants.MEMBER.TYPE_NAME, field = DgsConstants.MEMBER.Posts)

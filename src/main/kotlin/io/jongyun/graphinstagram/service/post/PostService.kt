@@ -24,7 +24,7 @@ class PostService(
 
     fun createPost(memberId: Long, createPostInput: CreatePostInput): Boolean {
         contentValidation(createPostInput.content)
-        val member = member(memberId)
+        val member = findMemberById(memberId)
         val post = Post(
             createdBy = member,
             content = createPostInput.content
@@ -55,13 +55,13 @@ class PostService(
             .map { mapToGraphql(it) }
     }
 
-    fun updatePost(updatePostInput: UpdatePostInput): Boolean {
-        val post =
-            postRepository.findByCreatedByAndId(getMemberByContext(memberRepository), updatePostInput.postId.toLong())
-                ?: throw BusinessException(
-                    ErrorCode.POST_DOES_NOT_EXISTS,
-                    "게시물을 찾을 수 없습니다. ID: ${updatePostInput.postId}"
-                )
+    fun updatePost(memberId: Long, updatePostInput: UpdatePostInput): Boolean {
+        val member = findMemberById(memberId)
+        val post = postRepository.findByCreatedByAndId(member, updatePostInput.postId.toLong())
+            ?: throw BusinessException(
+                ErrorCode.POST_DOES_NOT_EXISTS,
+                "게시물을 찾을 수 없습니다. ID: ${updatePostInput.postId}"
+            )
         contentValidation(updatePostInput.content)
         post.content = updatePostInput.content
         postRepository.save(post)
@@ -77,7 +77,7 @@ class PostService(
         }
     }
 
-    private fun member(memberId: Long): Member {
+    private fun findMemberById(memberId: Long): Member {
         val member = memberRepository.findById(memberId).orElseThrow {
             BusinessException(ErrorCode.MEMBER_DOES_NOT_EXISTS, "계정을 찾을 수 없습니다.")
         }

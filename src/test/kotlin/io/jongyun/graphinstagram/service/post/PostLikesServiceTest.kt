@@ -7,6 +7,7 @@ import io.jongyun.graphinstagram.entity.post.PostLikesRepository
 import io.jongyun.graphinstagram.entity.post.PostRepository
 import io.jongyun.graphinstagram.exception.BusinessException
 import io.jongyun.graphinstagram.exception.ErrorCode
+import io.jongyun.graphinstagram.types.LikeCancelPostInput
 import io.jongyun.graphinstagram.types.LikePostInput
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -21,9 +22,9 @@ internal class PostLikesServiceTest : BehaviorSpec({
     val postLikeRepository: PostLikesRepository = mockk()
     val memberRepository: MemberRepository = mockk()
     val postRepository: PostRepository = mockk()
-    val postLikeService: PostLikesService = PostLikesService(postLikeRepository, postRepository, memberRepository)
+    val postLikeService = PostLikesService(postLikeRepository, postRepository, memberRepository)
 
-    Given("LikePostInput") {
+    Given("Add like post") {
         val likePostInput = LikePostInput("1")
         val member = generateMember(1L)
         val post = generatePost(member, 1L)
@@ -62,6 +63,50 @@ internal class PostLikesServiceTest : BehaviorSpec({
                 }
                 result shouldBe true
                 post.postLikeList.size shouldBe 1
+            }
+        }
+    }
+
+    Given("Like cancel to post") {
+        val likeCancelPostInput = LikeCancelPostInput("1")
+        val member = generateMember(1L)
+        val post = generatePost(member, 1L)
+        When("member 를 찾을 수 없어서") {
+            every { memberRepository.findById(1L) } returns Optional.empty()
+            Then("예외가 발생한다.") {
+                val exception = shouldThrow<BusinessException> { postLikeService.likeCancel(1L, likeCancelPostInput) }
+                exception.errorCode shouldBe ErrorCode.MEMBER_DOES_NOT_EXISTS
+            }
+        }
+        When("post 를 찾을 수 없어서") {
+            every { memberRepository.findById(1L) } returns Optional.of(member)
+            every { postRepository.findByCreatedByAndId(member, 1L) } returns null
+            Then("예외가 발생한다.") {
+                val exception = shouldThrow<BusinessException> { postLikeService.likeCancel(1L, likeCancelPostInput) }
+                exception.errorCode shouldBe ErrorCode.POST_DOES_NOT_EXISTS
+            }
+        }
+        When("post 를 좋아요 누른적이 없어서") {
+            every { memberRepository.findById(1L) } returns Optional.of(member)
+            every { postRepository.findByCreatedByAndId(member, 1L) } returns post
+            every { postLikeRepository.findByLikedByAndPost(member, post) } returns null
+            Then("예외가 발생한다.") {
+                val exception = shouldThrow<BusinessException> { postLikeService.likeCancel(1L, likeCancelPostInput) }
+                exception.errorCode shouldBe ErrorCode.POST_LIKES_DOES_NOT_EXISTS
+            }
+        }
+        When("모든 케이스를 통과해서") {
+            val postLikes = post.addLike(member)
+            every { memberRepository.findById(1L) } returns Optional.of(member)
+            every { postRepository.findByCreatedByAndId(member, 1L) } returns post
+            every { postLikeRepository.findByLikedByAndPost(member, post) } returns postLikes
+            every { postRepository.save(post) } returns post
+            Then("성공한다.") {
+                val result = withContext(Dispatchers.IO) {
+                    postLikeService.likeCancel(1L, likeCancelPostInput)
+                }
+                result shouldBe true
+                post.postLikeList.size shouldBe 0
             }
         }
     }

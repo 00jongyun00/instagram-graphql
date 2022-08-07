@@ -1,3 +1,7 @@
 input LikePostInput {
     postId: ID!
 }
+
+input LikeCancelPostInput {
+    postId: ID!
+}

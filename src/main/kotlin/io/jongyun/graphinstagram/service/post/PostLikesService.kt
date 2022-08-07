@@ -6,6 +6,7 @@ import io.jongyun.graphinstagram.entity.post.PostLikesRepository
 import io.jongyun.graphinstagram.entity.post.PostRepository
 import io.jongyun.graphinstagram.exception.BusinessException
 import io.jongyun.graphinstagram.exception.ErrorCode
+import io.jongyun.graphinstagram.types.LikeCancelPostInput
 import io.jongyun.graphinstagram.types.LikePostInput
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -30,6 +31,20 @@ class PostLikesService(
             throw BusinessException(ErrorCode.THIS_POST_HAS_ALREADY_BEEN_LIKED, "이미 좋아요누른 게시글 입니다. POST ID: ${post.id}")
         }
         post.addLike(member)
+        postRepository.save(post)
+        return true
+    }
+
+    fun likeCancel(memberId: Long, likeCancelPostInput: LikeCancelPostInput): Boolean {
+        val member = findMemberById(memberId)
+        val post = postRepository.findByCreatedByAndId(member, likeCancelPostInput.postId.toLong())
+            ?: throw BusinessException(
+                ErrorCode.POST_DOES_NOT_EXISTS,
+                "post 를 찾을 수 없습니다. ID: ${likeCancelPostInput.postId}"
+            )
+        val postLikes = postLikesRepository.findByLikedByAndPost(member, post)
+            ?: throw BusinessException(ErrorCode.POST_LIKES_DOES_NOT_EXISTS, "좋아요 를 누른게시글이 아닙니다.")
+        post.likeCancel(postLikes)
         postRepository.save(post)
         return true
     }

@@ -8,7 +8,6 @@ import io.jongyun.graphinstagram.exception.BusinessException
 import io.jongyun.graphinstagram.exception.ErrorCode
 import io.jongyun.graphinstagram.types.CreatePostInput
 import io.jongyun.graphinstagram.types.UpdatePostInput
-import io.jongyun.graphinstagram.util.getMemberByContext
 import io.jongyun.graphinstagram.util.mapToGraphql
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -47,12 +46,6 @@ class PostService(
     @Transactional(readOnly = true)
     fun getAll(): List<TypesPost> {
         return postRepository.findAll().map { mapToGraphql(it) }
-    }
-
-    @Transactional(readOnly = true)
-    fun getMyPosts(): List<TypesPost> {
-        return postRepository.findByCreatedBy(getMemberByContext(memberRepository))
-            .map { mapToGraphql(it) }
     }
 
     fun updatePost(memberId: Long, updatePostInput: UpdatePostInput): Boolean {

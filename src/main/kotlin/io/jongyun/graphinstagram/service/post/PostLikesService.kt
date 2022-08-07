@@ -1,12 +1,12 @@
 package io.jongyun.graphinstagram.service.post
 
+import io.jongyun.graphinstagram.entity.member.Member
 import io.jongyun.graphinstagram.entity.member.MemberRepository
 import io.jongyun.graphinstagram.entity.post.PostLikesRepository
 import io.jongyun.graphinstagram.entity.post.PostRepository
 import io.jongyun.graphinstagram.exception.BusinessException
 import io.jongyun.graphinstagram.exception.ErrorCode
 import io.jongyun.graphinstagram.types.LikePostInput
-import io.jongyun.graphinstagram.util.getMemberByContext
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -18,8 +18,8 @@ class PostLikesService(
     private val memberRepository: MemberRepository
 ) {
 
-    fun addLike(likePostInput: LikePostInput): Boolean {
-        val member = getMemberByContext(memberRepository)
+    fun addLike(memberId: Long, likePostInput: LikePostInput): Boolean {
+        val member = findMemberById(memberId)
         val post = postRepository.findById(likePostInput.postId.toLong()).orElseThrow {
             BusinessException(
                 ErrorCode.POST_DOES_NOT_EXISTS,
@@ -32,5 +32,12 @@ class PostLikesService(
         post.addLike(member)
         postRepository.save(post)
         return true
+    }
+
+    private fun findMemberById(memberId: Long): Member {
+        val member = memberRepository.findById(memberId).orElseThrow {
+            BusinessException(ErrorCode.MEMBER_DOES_NOT_EXISTS, "계정을 찾을 수 없습니다.")
+        }
+        return member
     }
 }

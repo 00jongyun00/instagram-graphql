@@ -22,11 +22,6 @@ class PostDataFetcher(
         return postService.getPost(postId)
     }
 
-    @DgsQuery(field = DgsConstants.QUERY.MyPostList)
-    fun getMyPosts(): CompletableFuture<List<Post>> {
-        return CompletableFuture.supplyAsync { postService.getMyPosts() }
-    }
-
     @DgsQuery
     fun posts(): List<Post> {
         return postService.getAll()

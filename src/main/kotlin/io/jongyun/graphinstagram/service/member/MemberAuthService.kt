@@ -5,8 +5,6 @@ import io.jongyun.graphinstagram.entity.member.MemberRepository
 import io.jongyun.graphinstagram.exception.BusinessException
 import io.jongyun.graphinstagram.exception.ErrorCode
 import io.jongyun.graphinstagram.types.MemberLoginInput
-import io.jongyun.graphinstagram.util.getMemberByContext
-import io.jongyun.graphinstagram.util.mapToGraphql
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -14,7 +12,6 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import io.jongyun.graphinstagram.types.Member as TypesMember
 
 @Service
 class MemberAuthService(
@@ -37,13 +34,4 @@ class MemberAuthService(
             throw BusinessException(ErrorCode.CHECK_YOUR_ACCOUNT, "비밀번호가 틀렸습니다.")
         }
     }
-
-
-    @Transactional(readOnly = true)
-    fun findMyInfo(): TypesMember {
-        val member = getMemberByContext(memberRepository)
-        return mapToGraphql(member)
-    }
-
-
 }

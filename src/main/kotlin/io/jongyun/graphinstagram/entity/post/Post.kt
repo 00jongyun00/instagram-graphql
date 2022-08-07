@@ -22,8 +22,13 @@ class Post(
     @OneToMany(mappedBy = "post", cascade = [ALL], orphanRemoval = true)
     val postLikeList: MutableList<PostLikes> = mutableListOf()
 
-    fun addLike(member: Member) {
+    fun addLike(member: Member): PostLikes {
         val postLikes = PostLikes(this, member)
         postLikeList.add(postLikes)
+        return postLikes
+    }
+
+    fun likeCancel(postLikes: PostLikes) {
+        postLikeList.remove(postLikes)
     }
 }

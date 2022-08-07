@@ -14,7 +14,7 @@
 - docker
 - Kotest
 
-# TEST Convention
+## TEST Convention
 
 [BDD] - 비즈니스 로직 작성시 테스트 코드를 먼저 작성하고 비즈니스 로직을 작성하는 방향으로 불필요한 Dependency 를 제거하고 코드를 깔끔하게 유지한다.
 

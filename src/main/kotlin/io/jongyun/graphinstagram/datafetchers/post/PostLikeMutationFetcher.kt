@@ -6,6 +6,7 @@ import com.netflix.graphql.dgs.InputArgument
 import io.jongyun.graphinstagram.DgsConstants
 import io.jongyun.graphinstagram.service.post.PostLikesService
 import io.jongyun.graphinstagram.types.LikePostInput
+import io.jongyun.graphinstagram.util.getAuthName
 
 @DgsComponent
 class PostLikeMutationFetcher(
@@ -14,6 +15,6 @@ class PostLikeMutationFetcher(
 
     @DgsData(parentType = DgsConstants.Mutation_TYPE, field = DgsConstants.MUTATION.PostLike)
     fun addLike(@InputArgument likePostInput: LikePostInput): Boolean {
-        return postLikesService.addLike(likePostInput)
+        return postLikesService.addLike(getAuthName(), likePostInput)
     }
 }

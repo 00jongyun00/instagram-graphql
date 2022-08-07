@@ -18,7 +18,6 @@ class Post(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
-        protected set
 
     @OneToMany(mappedBy = "post", cascade = [ALL], orphanRemoval = true)
     val postLikeList: MutableList<PostLikes> = mutableListOf()

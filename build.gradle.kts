@@ -67,6 +67,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8")
 
+    implementation("com.google.code.gson:gson:2.8.9")
+
     // https://mvnrepository.com/artifact/io.mockk/mockk
     testImplementation("io.mockk:mockk:1.12.5")
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")

@@ -1,10 +1,10 @@
-package io.jongyun.graphinstagram.datafetchers.example
+package io.jongyun.graphinstagram.datafetchers.post
 
 import com.netflix.graphql.dgs.DgsQueryExecutor
 import com.netflix.graphql.dgs.autoconfig.DgsAutoConfiguration
 import io.jongyun.graphinstagram.GraphInstagramApplication
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.ints.shouldBeExactly
+import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.spring.SpringListener
 import org.hibernate.annotations.common.util.impl.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,7 +13,7 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(classes = [DgsAutoConfiguration::class, GraphInstagramApplication::class])
 @ActiveProfiles("local")
-internal class ShowsDataFetcherTest : DescribeSpec() {
+internal class PostDataFetcherTest : DescribeSpec() {
 
     @Autowired
     lateinit var dgsQueryExecutor: DgsQueryExecutor
@@ -21,22 +21,22 @@ internal class ShowsDataFetcherTest : DescribeSpec() {
     override fun listeners() = listOf(SpringListener)
 
     init {
-        val logger = LoggerFactory.logger(ShowsDataFetcherTest::class.java)
-        describe("Shows") {
-            it("Should return specific show") {
-                val showList: List<String> = dgsQueryExecutor.executeAndExtractJsonPath(
+        val logger = LoggerFactory.logger(PostDataFetcherTest::class.java)
+        describe("posts") {
+            it("get all posts") {
+                val postLists: List<String> = dgsQueryExecutor.executeAndExtractJsonPath(
                     """
                     {
-                        shows {
-                            title
-                            releaseYear
+                        posts {
+                            id
+                            content
+                            createdAt
+                            updatedAt
                         }
                     }
-                    """.trimIndent(),
-                    "data.shows[*].title",
+                    """.trimIndent(), "data.posts"
                 )
-                logger.info(showList)
-                showList.size shouldBeExactly 5
+                postLists.size shouldBeGreaterThan 0
             }
         }
     }

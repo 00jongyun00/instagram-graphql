@@ -34,12 +34,7 @@ class PostService(
 
     @Transactional(readOnly = true)
     fun getPost(postId: Long): TypesPost {
-        val post = postRepository.findById(postId).orElseThrow {
-            BusinessException(
-                ErrorCode.POST_DOES_NOT_EXISTS,
-                "게시물을 찾을 수 없습니다. ID: $postId"
-            )
-        }
+        val post = findPostById(postId)
         return mapToGraphql(post)
     }
 
@@ -61,6 +56,11 @@ class PostService(
         return true
     }
 
+    @Transactional(readOnly = true)
+    fun getAllLikedMemberToPost(postId: Long) {
+        val post = findPostById(postId)
+    }
+
     private fun contentValidation(content: String) {
         when {
             !StringUtils.hasText(content) ->
@@ -75,6 +75,13 @@ class PostService(
             BusinessException(ErrorCode.MEMBER_DOES_NOT_EXISTS, "계정을 찾을 수 없습니다.")
         }
         return member
+    }
+
+    private fun findPostById(postId: Long) = postRepository.findById(postId).orElseThrow {
+        BusinessException(
+            ErrorCode.POST_DOES_NOT_EXISTS,
+            "게시물을 찾을 수 없습니다. ID: $postId"
+        )
     }
 
 }

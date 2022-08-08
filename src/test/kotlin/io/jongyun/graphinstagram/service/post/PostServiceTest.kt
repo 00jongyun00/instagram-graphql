@@ -5,11 +5,13 @@ import io.jongyun.graphinstagram.entity.member.MemberRepository
 import io.jongyun.graphinstagram.entity.post.Post
 import io.jongyun.graphinstagram.entity.post.PostRepository
 import io.jongyun.graphinstagram.exception.BusinessException
+import io.jongyun.graphinstagram.exception.ErrorCode
 import io.jongyun.graphinstagram.types.CreatePostInput
 import io.jongyun.graphinstagram.types.UpdatePostInput
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import java.util.*
@@ -34,6 +36,10 @@ internal class PostServiceTest : BehaviorSpec({
             "1",
             "업데이트 테스트"
         )
+    }
+
+    afterTest {
+        clearAllMocks()
     }
 
     given("post content 가 비어있어서") {
@@ -73,6 +79,17 @@ internal class PostServiceTest : BehaviorSpec({
             every { postRepository.save(post) } returns post
             Then("정상적으로 업데이트 된다.") {
                 postService.updatePost(memberId, updatePostInput) shouldBe true
+            }
+        }
+    }
+
+    given("좋아요 누른 모든 회원 조회시 post id 를 1로 설정한다.") {
+        val postId = 1L
+        When("post id 에 대한 post 를 찾을 수 없다") {
+            every { postRepository.findById(postId) } returns Optional.empty()
+            Then("post 를 찾지 못해 예외가 발생한다.") {
+                val exception = shouldThrow<BusinessException> { postService.getAllLikedMemberToPost(postId) }
+                exception.errorCode shouldBe ErrorCode.POST_DOES_NOT_EXISTS
             }
         }
     }

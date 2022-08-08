@@ -60,13 +60,16 @@ dependencies {
     testImplementation("io.kotest:kotest-framework-datatest:${kotestVersion}")
     testImplementation("io.kotest:kotest-extensions-spring:4.4.3")
 
+    testImplementation("com.ninja-squad:springmockk:2.0.0")
+
     implementation("com.github.javafaker:javafaker:1.+")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8")
 
     // https://mvnrepository.com/artifact/io.mockk/mockk
-    testImplementation("io.mockk:mockk:1.12.4")
+    testImplementation("io.mockk:mockk:1.12.5")
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
 }
 
 tasks.withType<KotlinCompile> {

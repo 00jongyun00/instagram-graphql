@@ -1,6 +1,7 @@
 package io.jongyun.graphinstagram.service.post
 
 import io.jongyun.graphinstagram.entity.member.Member
+import io.jongyun.graphinstagram.entity.member.MemberCustomRepository
 import io.jongyun.graphinstagram.entity.member.MemberRepository
 import io.jongyun.graphinstagram.entity.post.Post
 import io.jongyun.graphinstagram.entity.post.PostRepository
@@ -12,13 +13,15 @@ import io.jongyun.graphinstagram.util.mapToGraphql
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.StringUtils
+import io.jongyun.graphinstagram.types.Member as TypesMember
 import io.jongyun.graphinstagram.types.Post as TypesPost
 
 @Transactional
 @Service
 class PostService(
     private val postRepository: PostRepository,
-    private val memberRepository: MemberRepository
+    private val memberRepository: MemberRepository,
+    private val memberCustomRepository: MemberCustomRepository
 ) {
 
     fun createPost(memberId: Long, createPostInput: CreatePostInput): Boolean {
@@ -57,8 +60,9 @@ class PostService(
     }
 
     @Transactional(readOnly = true)
-    fun getAllLikedMemberToPost(postId: Long) {
+    fun getAllLikedMemberToPost(postId: Long): List<TypesMember> {
         val post = findPostById(postId)
+        return memberCustomRepository.findAllLikedMemberToPost(post).map { mapToGraphql(it) }
     }
 
     private fun contentValidation(content: String) {

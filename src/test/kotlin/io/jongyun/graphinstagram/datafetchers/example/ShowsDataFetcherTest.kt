@@ -13,7 +13,7 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(classes = [DgsAutoConfiguration::class, GraphInstagramApplication::class])
 @ActiveProfiles("local")
-internal class ShowsDataFetcherTest : DescribeSpec() {
+class ShowsDataFetcherTest : DescribeSpec() {
 
     @Autowired
     lateinit var dgsQueryExecutor: DgsQueryExecutor

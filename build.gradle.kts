@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    val kotlinVersion = "1.6.21"
+    val kotlinVersion = "1.5.10"
     id("org.springframework.boot") version "2.6.10"
     id("io.spring.dependency-management") version "1.0.12.RELEASE"
     kotlin("jvm") version kotlinVersion
@@ -63,18 +63,19 @@ dependencies {
     testImplementation("io.kotest:kotest-framework-datatest:${kotestVersion}")
     testImplementation("io.kotest:kotest-extensions-spring:4.4.3")
 
-    testImplementation("com.ninja-squad:springmockk:2.0.0")
+//    testImplementation("com.ninja-squad:springmockk:3.1.1")
 
-    implementation("com.github.javafaker:javafaker:1.+")
+    implementation("com.github.javafaker:javafaker:1.0.2")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8")
 
-    implementation("com.google.code.gson:gson:2.8.9")
+    implementation("com.google.code.gson:gson:2.9.0")
 
     // https://mvnrepository.com/artifact/io.mockk/mockk
-    testImplementation("io.mockk:mockk:1.12.5")
+    testImplementation("io.mockk:mockk:1.12.3")
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
 
     implementation("com.querydsl:querydsl-jpa:5.0.0")
     kapt("com.querydsl:querydsl-apt:5.0.0:jpa")
@@ -86,10 +87,6 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "11"
     }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }
 
 tasks.withType<com.netflix.graphql.dgs.codegen.gradle.GenerateJavaTask> {
@@ -107,4 +104,8 @@ idea {
         sourceDirs.add(kaptMain)
         generatedSourceDirs.add(kaptMain)
     }
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

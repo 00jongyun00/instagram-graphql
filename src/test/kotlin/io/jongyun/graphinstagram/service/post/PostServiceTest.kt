@@ -1,6 +1,8 @@
 package io.jongyun.graphinstagram.service.post
 
+import com.github.javafaker.Faker
 import io.jongyun.graphinstagram.entity.member.Member
+import io.jongyun.graphinstagram.entity.member.MemberCustomRepository
 import io.jongyun.graphinstagram.entity.member.MemberRepository
 import io.jongyun.graphinstagram.entity.post.Post
 import io.jongyun.graphinstagram.entity.post.PostRepository
@@ -8,34 +10,40 @@ import io.jongyun.graphinstagram.exception.BusinessException
 import io.jongyun.graphinstagram.exception.ErrorCode
 import io.jongyun.graphinstagram.types.CreatePostInput
 import io.jongyun.graphinstagram.types.UpdatePostInput
+import io.jongyun.graphinstagram.util.mapToGraphql
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.common.ExperimentalKotest
 import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.ints.shouldBeExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.time.OffsetDateTime
 import java.util.*
+import io.jongyun.graphinstagram.types.Post as TypesPost
 
 
-internal class PostServiceTest : BehaviorSpec({
+val faker = Faker()
+const val REPEAT_COUNT = 10
+
+@ExperimentalKotest
+class PostServiceTest : BehaviorSpec({
     val postRepository: PostRepository = mockk()
     val memberRepository: MemberRepository = mockk()
-    val postService = PostService(postRepository, memberRepository)
+    val memberCustomRepository: MemberCustomRepository = mockk()
+    val postService = PostService(postRepository, memberRepository, memberCustomRepository)
     lateinit var member: Member
     lateinit var post: Post
     lateinit var updatePostInput: UpdatePostInput
+    var likedMembersToPost: MutableList<Member> = mutableListOf()
 
     beforeTest {
-        member = Member(
-            name = "jongyun", password = "123456"
-        )
-        post = Post(
-            content = "테스트 입니다.", createdBy = member
-        )
-        updatePostInput = UpdatePostInput(
-            "1",
-            "업데이트 테스트"
-        )
+        member = generateMember()
+        post = Post(content = "테스트 입니다.", createdBy = member)
+        updatePostInput = UpdatePostInput("1", "업데이트 테스트")
     }
 
     afterTest {
@@ -85,6 +93,9 @@ internal class PostServiceTest : BehaviorSpec({
 
     given("좋아요 누른 모든 회원 조회시 post id 를 1로 설정한다.") {
         val postId = 1L
+        repeat(REPEAT_COUNT) {
+            likedMembersToPost.add(generateMember())
+        }
         When("post id 에 대한 post 를 찾을 수 없다") {
             every { postRepository.findById(postId) } returns Optional.empty()
             Then("post 를 찾지 못해 예외가 발생한다.") {
@@ -92,5 +103,31 @@ internal class PostServiceTest : BehaviorSpec({
                 exception.errorCode shouldBe ErrorCode.POST_DOES_NOT_EXISTS
             }
         }
+        When("모든 조건이 통과되어") {
+            every { postRepository.findById(postId) } returns Optional.of(post)
+            every { memberCustomRepository.findAllLikedMemberToPost(post) } returns likedMembersToPost
+            Then("성공한다.") {
+                val result = withContext(Dispatchers.IO) {
+                    postService.getAllLikedMemberToPost(postId)
+                }
+                result.count() shouldBeExactly REPEAT_COUNT
+            }
+        }
     }
 })
+
+fun generateTypePost(member: Member): TypesPost {
+    return TypesPost(
+        id = faker.idNumber().toString(),
+        createdBy = mapToGraphql(member),
+        content = faker.book().title(),
+        createdAt = OffsetDateTime.now(),
+        updatedAt = OffsetDateTime.now(),
+    )
+}
+
+fun generateMember(): Member {
+    return Member(
+        faker.name().toString(), faker.hashCode().toString()
+    )
+}

@@ -1,4 +1,4 @@
-package io.jongyun.graphinstagram.configuration
+package io.jongyun.graphinstagram.configuration.security
 
 import io.jongyun.graphinstagram.filter.JwtFilter
 import org.springframework.context.annotation.Bean

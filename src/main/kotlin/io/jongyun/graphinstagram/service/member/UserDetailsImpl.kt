@@ -14,7 +14,7 @@ class UserDetailsImpl(val member: Member) : UserDetails {
 
     override fun getPassword(): String = member.password
 
-    override fun getUsername(): String = member.name
+    override fun getUsername(): String = member.id.toString()
 
     override fun isAccountNonExpired(): Boolean = enabled
 

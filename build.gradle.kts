@@ -9,14 +9,25 @@ plugins {
     kotlin("plugin.allopen") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
     kotlin("kapt") version kotlinVersion
+
     id("com.netflix.dgs.codegen") version "5.1.16"
-    idea
+}
+
+configurations {
+    compileOnly {
+        extendsFrom(configurations.annotationProcessor.get())
+    }
 }
 
 allOpen {
     annotation("javax.persistence.Entity")
     annotation("javax.persistence.Embeddable")
     annotation("javax.persistence.MappedSuperclass")
+}
+
+noArg {
+    annotation("javax.persistence.Entity")
+    invokeInitializers = true
 }
 
 group = "io.jongyun"
@@ -63,7 +74,7 @@ dependencies {
     testImplementation("io.kotest:kotest-framework-datatest:${kotestVersion}")
     testImplementation("io.kotest:kotest-extensions-spring:4.4.3")
 
-//    testImplementation("com.ninja-squad:springmockk:3.1.1")
+    testImplementation("com.ninja-squad:springmockk:3.1.1")
 
     implementation("com.github.javafaker:javafaker:1.0.2")
 
@@ -77,8 +88,9 @@ dependencies {
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
 
-    implementation("com.querydsl:querydsl-jpa:5.0.0")
-    kapt("com.querydsl:querydsl-apt:5.0.0:jpa")
+    // queryDSL
+    implementation("com.querydsl:querydsl-jpa")
+    kapt(group = "com.querydsl", name = "querydsl-apt", classifier = "jpa")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
 }
 
@@ -98,14 +110,10 @@ tasks.withType<com.netflix.graphql.dgs.codegen.gradle.GenerateJavaTask> {
     typeMapping = mutableMapOf()
 }
 
-idea {
-    module {
-        val kaptMain = file("build/generated/source/kapt/main")
-        sourceDirs.add(kaptMain)
-        generatedSourceDirs.add(kaptMain)
-    }
-}
-
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+kotlin.sourceSets.main {
+    setBuildDir("$buildDir")
 }

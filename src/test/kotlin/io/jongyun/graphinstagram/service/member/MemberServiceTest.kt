@@ -5,6 +5,7 @@ import io.jongyun.graphinstagram.entity.member.MemberRepository
 import io.jongyun.graphinstagram.exception.BusinessException
 import io.jongyun.graphinstagram.types.MemberRegisterInput
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.common.ExperimentalKotest
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -13,7 +14,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
-internal class MemberServiceTest : FeatureSpec({
+@ExperimentalKotest
+class MemberServiceTest : FeatureSpec({
     val memberRepository = mockk<MemberRepository>()
     val encoder = mockk<BCryptPasswordEncoder>()
     val memberService = MemberService(memberRepository, encoder)

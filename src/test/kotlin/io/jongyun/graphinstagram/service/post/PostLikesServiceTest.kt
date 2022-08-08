@@ -18,7 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
 
-internal class PostLikesServiceTest : BehaviorSpec({
+class PostLikesServiceTest : BehaviorSpec({
     val postLikeRepository: PostLikesRepository = mockk()
     val memberRepository: MemberRepository = mockk()
     val postRepository: PostRepository = mockk()

@@ -7,6 +7,7 @@ type Query {
     myLikedPostList: [Post!]
     shows(titleFilter: String): [Show]
     posts: [Post!]
+    likedMembersToPost(postId: ID!): [Member!]
 }
 
 type Mutation {

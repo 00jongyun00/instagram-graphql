@@ -13,7 +13,6 @@ import io.jongyun.graphinstagram.util.mapToGraphql
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.StringUtils
-import io.jongyun.graphinstagram.types.Member as TypesMember
 import io.jongyun.graphinstagram.types.Post as TypesPost
 
 @Transactional
@@ -59,11 +58,6 @@ class PostService(
         return true
     }
 
-    @Transactional(readOnly = true)
-    fun getAllLikedMemberToPost(postId: Long): List<TypesMember> {
-        val post = findPostById(postId)
-        return memberCustomRepository.findAllLikedMemberToPost(post).map { mapToGraphql(it) }
-    }
 
     private fun contentValidation(content: String) {
         when {

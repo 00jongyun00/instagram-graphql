@@ -1,7 +1,9 @@
 package io.jongyun.graphinstagram.service.member
 
 import io.jongyun.graphinstagram.entity.member.Member
+import io.jongyun.graphinstagram.entity.member.MemberCustomRepository
 import io.jongyun.graphinstagram.entity.member.MemberRepository
+import io.jongyun.graphinstagram.entity.post.PostRepository
 import io.jongyun.graphinstagram.exception.BusinessException
 import io.jongyun.graphinstagram.exception.ErrorCode
 import io.jongyun.graphinstagram.types.MemberRegisterInput
@@ -14,7 +16,9 @@ import io.jongyun.graphinstagram.types.Member as TypesMember
 @Service
 class MemberService(
     private val memberRepository: MemberRepository,
-    private val encoder: BCryptPasswordEncoder
+    private val encoder: BCryptPasswordEncoder,
+    private val memberCustomRepository: MemberCustomRepository,
+    private val postRepository: PostRepository
 ) {
 
     @Transactional
@@ -36,6 +40,20 @@ class MemberService(
         return mapToGraphql(findMemberById(memberId))
     }
 
+
+    @Transactional(readOnly = true)
+    fun findAllLikedMemberToPost(postId: Long): List<TypesMember> {
+        val post = findPostById(postId)
+        return memberCustomRepository.findAllLikedMemberToPost(post).map { mapToGraphql(it) }
+    }
+
+    private fun findPostById(postId: Long) = postRepository.findById(postId).orElseThrow {
+        BusinessException(
+            ErrorCode.POST_DOES_NOT_EXISTS,
+            "게시물을 찾을 수 없습니다. ID: $postId"
+        )
+    }
+
     private fun findMemberById(memberId: Long): Member {
         val member = memberRepository.findById(memberId).orElseThrow {
             BusinessException(ErrorCode.MEMBER_DOES_NOT_EXISTS, "계정을 찾을 수 없습니다.")
@@ -47,3 +65,4 @@ class MemberService(
 private fun mapToEntity(memberRegisterInput: MemberRegisterInput): Member {
     return Member(name = memberRegisterInput.name, password = memberRegisterInput.password)
 }
+

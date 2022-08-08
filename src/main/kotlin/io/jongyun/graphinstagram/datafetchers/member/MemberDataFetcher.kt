@@ -29,6 +29,11 @@ class MemberDataFetcher(
         return MemberLoginResponse(jwtToken)
     }
 
+    @DgsData(parentType = DgsConstants.QUERY.TYPE_NAME, field = DgsConstants.QUERY.LikedMembersToPost)
+    fun getAllLikedMembersToPost(@InputArgument postId: Long): List<Member> {
+        return memberService.findAllLikedMemberToPost(postId)
+    }
+
     @DgsData(parentType = DgsConstants.POST.TYPE_NAME, field = DgsConstants.POST.CreatedBy)
     fun members(dfe: DgsDataFetchingEnvironment): CompletableFuture<List<Member>> {
         // DataLoader 를 이름으로 로드하는 대신 DgsDataFetchingEnvironment 를 사용하고 DataLoader 클래스 이름을 전달할 수 있습니다.
@@ -39,6 +44,5 @@ class MemberDataFetcher(
 
         // DataLoader 에서 리뷰를 로드합니다. 이 호출은 비동기식이며 DataLoader 메커니즘에 의해 일괄 처리됩니다.
         return membersDataLoader.load(post.id.toLong())
-
     }
 }

@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    val kotlinVersion = "1.5.10"
+    val kotlinVersion = "1.6.10"
     id("org.springframework.boot") version "2.6.10"
     id("io.spring.dependency-management") version "1.0.12.RELEASE"
     kotlin("jvm") version kotlinVersion
@@ -23,7 +23,7 @@ group = "io.jongyun"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
-val kotestVersion = "5.0.0"
+val kotestVersion = "4.6.0"
 
 repositories {
     mavenCentral()

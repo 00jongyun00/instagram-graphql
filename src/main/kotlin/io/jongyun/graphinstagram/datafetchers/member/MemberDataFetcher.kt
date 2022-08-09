@@ -5,17 +5,26 @@ import com.netflix.graphql.dgs.DgsData
 import com.netflix.graphql.dgs.DgsDataFetchingEnvironment
 import com.netflix.graphql.dgs.InputArgument
 import io.jongyun.graphinstagram.DgsConstants
+import io.jongyun.graphinstagram.DgsConstants.QUERY
 import io.jongyun.graphinstagram.dataloader.member.MembersDataLoader
+import io.jongyun.graphinstagram.service.member.FollowService
 import io.jongyun.graphinstagram.service.member.MemberAuthService
 import io.jongyun.graphinstagram.service.member.MemberService
-import io.jongyun.graphinstagram.types.*
-import org.dataloader.DataLoader
+import io.jongyun.graphinstagram.types.Member
+import io.jongyun.graphinstagram.types.MemberLoginInput
+import io.jongyun.graphinstagram.types.MemberLoginResponse
+import io.jongyun.graphinstagram.types.MemberRegisterInput
+import io.jongyun.graphinstagram.types.Post
+import io.jongyun.graphinstagram.util.getAuthName
+import io.jongyun.graphinstagram.util.mapToGraphql
 import java.util.concurrent.CompletableFuture
+import org.dataloader.DataLoader
 
 @DgsComponent
 class MemberDataFetcher(
     private val memberService: MemberService,
-    private val memberAuthService: MemberAuthService
+    private val memberAuthService: MemberAuthService,
+    private val followService: FollowService
 ) {
 
     @DgsData(parentType = DgsConstants.Mutation_TYPE, field = DgsConstants.MUTATION.MemberRegister)
@@ -29,9 +38,14 @@ class MemberDataFetcher(
         return MemberLoginResponse(jwtToken)
     }
 
-    @DgsData(parentType = DgsConstants.QUERY.TYPE_NAME, field = DgsConstants.QUERY.LikedMembersToPost)
+    @DgsData(parentType = QUERY.TYPE_NAME, field = QUERY.LikedMembersToPost)
     fun getAllLikedMembersToPost(@InputArgument postId: Long): List<Member> {
         return memberService.findAllLikedMemberToPost(postId)
+    }
+
+    @DgsData(parentType = QUERY.TYPE_NAME, field = QUERY.MyFollowers)
+    fun getAllMyFollowers(): List<Member> {
+        return followService.getFollower(getAuthName()).map { mapToGraphql(it) }
     }
 
     @DgsData(parentType = DgsConstants.POST.TYPE_NAME, field = DgsConstants.POST.CreatedBy)

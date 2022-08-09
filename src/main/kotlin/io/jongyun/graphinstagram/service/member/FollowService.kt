@@ -1,5 +1,6 @@
 package io.jongyun.graphinstagram.service.member
 
+import io.jongyun.graphinstagram.entity.follow.FollowCustomRepository
 import io.jongyun.graphinstagram.entity.follow.FollowRepository
 import io.jongyun.graphinstagram.entity.member.Member
 import io.jongyun.graphinstagram.entity.member.MemberRepository
@@ -12,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class FollowService(
     private val memberRepository: MemberRepository,
-    private val followRepository: FollowRepository
+    private val followRepository: FollowRepository,
+    private val followCustomRepository: FollowCustomRepository
 ) {
 
     fun follow(followerId: Long, followeeId: Long): Boolean {
@@ -33,6 +35,12 @@ class FollowService(
             ?: throw BusinessException(ErrorCode.DID_NOT_FOLLOW, "팔로우 하지 않은 회원입니다.")
         followee.unfollow(follow)
         return true
+    }
+
+    @Transactional(readOnly = true)
+    fun getFollower(memberId: Long): List<Member> {
+        val member = findMemberById(memberId)
+        return followCustomRepository.findAllByMember(member)
     }
 
     private fun findMemberById(memberId: Long): Member {

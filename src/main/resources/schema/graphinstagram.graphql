@@ -15,6 +15,7 @@ type Mutation {
     memberLogin(memberLoginInput: MemberLoginInput!): MemberLoginResponse!
     postCreate(createPostInput: CreatePostInput!): Boolean!
     postUpdate(updatePostInput: UpdatePostInput!): Boolean!
+    postDelete(postId: ID!): Boolean!
     postLike(likePostInput: LikePostInput!): Boolean!
     postLikeCancel(likeCancelPostInput: LikeCancelPostInput): Boolean!
 }

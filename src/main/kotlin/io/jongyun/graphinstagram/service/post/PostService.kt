@@ -1,7 +1,6 @@
 package io.jongyun.graphinstagram.service.post
 
 import io.jongyun.graphinstagram.entity.member.Member
-import io.jongyun.graphinstagram.entity.member.MemberCustomRepository
 import io.jongyun.graphinstagram.entity.member.MemberRepository
 import io.jongyun.graphinstagram.entity.post.Post
 import io.jongyun.graphinstagram.entity.post.PostRepository
@@ -19,8 +18,7 @@ import io.jongyun.graphinstagram.types.Post as TypesPost
 @Service
 class PostService(
     private val postRepository: PostRepository,
-    private val memberRepository: MemberRepository,
-    private val memberCustomRepository: MemberCustomRepository
+    private val memberRepository: MemberRepository
 ) {
 
     fun createPost(memberId: Long, createPostInput: CreatePostInput): Boolean {
@@ -55,6 +53,15 @@ class PostService(
         contentValidation(updatePostInput.content)
         post.content = updatePostInput.content
         postRepository.save(post)
+        return true
+    }
+
+    fun deletePost(memberId: Long, postId: Long): Boolean {
+        val member = findMemberById(memberId)
+        val post = postRepository.findByCreatedByAndId(member, postId) ?: throw BusinessException(
+            ErrorCode.POST_DOES_NOT_EXISTS, "post 를 찾을 수없습니다. post id: $postId"
+        )
+        postRepository.delete(post)
         return true
     }
 

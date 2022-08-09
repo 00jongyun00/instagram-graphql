@@ -2,11 +2,11 @@ package io.jongyun.graphinstagram.service.post
 
 import com.github.javafaker.Faker
 import io.jongyun.graphinstagram.entity.member.Member
-import io.jongyun.graphinstagram.entity.member.MemberCustomRepository
 import io.jongyun.graphinstagram.entity.member.MemberRepository
 import io.jongyun.graphinstagram.entity.post.Post
 import io.jongyun.graphinstagram.entity.post.PostRepository
 import io.jongyun.graphinstagram.exception.BusinessException
+import io.jongyun.graphinstagram.exception.ErrorCode
 import io.jongyun.graphinstagram.types.CreatePostInput
 import io.jongyun.graphinstagram.types.UpdatePostInput
 import io.jongyun.graphinstagram.util.mapToGraphql
@@ -19,6 +19,8 @@ import io.mockk.every
 import io.mockk.mockk
 import java.time.OffsetDateTime
 import java.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import io.jongyun.graphinstagram.types.Post as TypesPost
 
 
@@ -28,12 +30,10 @@ val faker = Faker()
 class PostServiceTest : BehaviorSpec({
     val postRepository: PostRepository = mockk()
     val memberRepository: MemberRepository = mockk()
-    val memberCustomRepository: MemberCustomRepository = mockk()
-    val postService = PostService(postRepository, memberRepository, memberCustomRepository)
+    val postService = PostService(postRepository, memberRepository)
     lateinit var member: Member
     lateinit var post: Post
     lateinit var updatePostInput: UpdatePostInput
-    var likedMembersToPost: MutableList<Member> = mutableListOf()
 
     beforeTest {
         member = generateMember()
@@ -82,6 +82,37 @@ class PostServiceTest : BehaviorSpec({
             every { postRepository.save(post) } returns post
             Then("정상적으로 업데이트 된다.") {
                 postService.updatePost(memberId, updatePostInput) shouldBe true
+            }
+        }
+    }
+
+    Given("post 삭제시 post ID 를 1로 설정한다.") {
+        val postId = 1L
+        val memberId = 1L
+        When("member id 에 대한 member 를 찾을 수없다.") {
+            every { memberRepository.findById(memberId) } returns Optional.empty()
+            Then("member 를 찾지못해 예외가 발생한다.") {
+                val result = shouldThrow<BusinessException> { postService.deletePost(memberId, postId) }
+                result.errorCode shouldBe ErrorCode.MEMBER_DOES_NOT_EXISTS
+            }
+        }
+        When("post id 에 대한 post 찾을 수 없다.") {
+            every { memberRepository.findById(memberId) } returns Optional.of(member)
+            every { postRepository.findByCreatedByAndId(member, postId) } returns null
+            Then("post 를 찾지 못해 예외가 발생한다.") {
+                val result = shouldThrow<BusinessException> { postService.deletePost(memberId, postId) }
+                result.errorCode shouldBe ErrorCode.POST_DOES_NOT_EXISTS
+            }
+        }
+        When("모든 조건을 통과한다.") {
+            every { memberRepository.findById(memberId) } returns Optional.of(member)
+            every { postRepository.findByCreatedByAndId(member, postId) } returns post
+            every { postRepository.delete(post) } returns Unit
+            Then("성공한다.") {
+                val result = withContext(Dispatchers.IO) {
+                    postService.deletePost(memberId, postId)
+                }
+                result shouldBe true
             }
         }
     }

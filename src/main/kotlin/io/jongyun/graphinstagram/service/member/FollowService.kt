@@ -26,6 +26,15 @@ class FollowService(
         return true
     }
 
+    fun unfollow(followerId: Long, followeeId: Long): Boolean {
+        val follower = findMemberById(followerId)
+        val followee = findMemberById(followeeId)
+        val follow = followRepository.findByFollowerAndFollowee(follower, followee)
+            ?: throw BusinessException(ErrorCode.DID_NOT_FOLLOW, "팔로우 하지 않은 회원입니다.")
+        followee.unfollow(follow)
+        return true
+    }
+
     private fun findMemberById(memberId: Long): Member {
         val member = memberRepository.findById(memberId).orElseThrow {
             BusinessException(ErrorCode.MEMBER_DOES_NOT_EXISTS, "계정을 찾을 수 없습니다.")

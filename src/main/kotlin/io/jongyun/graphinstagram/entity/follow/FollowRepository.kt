@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository
 interface FollowRepository : JpaRepository<Follow, Long> {
 
     fun existsByFollowerAndFollowee(follower: Member, followee: Member): Boolean
+
+    fun findByFollowerAndFollowee(follower: Member, followee: Member): Follow?
 }

@@ -31,4 +31,9 @@ class Member(
     fun follow(follower: Member) {
         followers.add(Follow(follower, this))
     }
+
+    fun unfollow(follow: Follow) {
+        followers.remove(follow)
+    }
+
 }

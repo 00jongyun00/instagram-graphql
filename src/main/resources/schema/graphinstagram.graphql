@@ -18,8 +18,8 @@ type Mutation {
     postDelete(postId: ID!): Boolean!
     postLike(likePostInput: LikePostInput!): Boolean!
     postLikeCancel(likeCancelPostInput: LikeCancelPostInput): Boolean!
-    follow(memberId: ID!): Boolean!
-    unFollow(memberId: ID!): Boolean!
+    follow(followeeId: ID!): Boolean!
+    unFollow(followeeId: ID!): Boolean!
 }
 
 # example

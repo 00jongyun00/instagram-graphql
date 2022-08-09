@@ -33,7 +33,7 @@ class FollowServiceTest : BehaviorSpec({
         clearAllMocks()
     }
 
-    Given("follower 와 followee set up 한다.") {
+    Given("[follow] follower 와 followee set up 한다.") {
         val followerId = 1L
         val followeeId = 2L
         When("팔로워를 찾지 못한다.") {

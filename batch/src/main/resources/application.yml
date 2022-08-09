@@ -29,3 +29,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+  batch:
+    jdbc:
+      initialize-schema: always

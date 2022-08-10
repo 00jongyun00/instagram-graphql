@@ -1,6 +1,5 @@
 type PostComment {
     id: ID!
-    post: Post!
     createdBy: Member!
     content: String!
     createdAt: DateTime!

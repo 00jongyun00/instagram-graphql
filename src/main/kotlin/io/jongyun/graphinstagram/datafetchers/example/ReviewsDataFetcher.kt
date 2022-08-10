@@ -7,8 +7,8 @@ import io.jongyun.graphinstagram.DgsConstants
 import io.jongyun.graphinstagram.dataloader.example.ReviewsDataLoader
 import io.jongyun.graphinstagram.types.Review
 import io.jongyun.graphinstagram.types.Show
-import org.dataloader.DataLoader
 import java.util.concurrent.CompletableFuture
+import org.dataloader.DataLoader
 
 @DgsComponent
 class ReviewsDataFetcher {
@@ -29,7 +29,7 @@ class ReviewsDataFetcher {
         val show: Show = dfe.getSource()
 
         // DataLoader 에서 리뷰를 로드합니다. 이 호출은 비동기식이며 DataLoader 메커니즘에 의해 일괄 처리됩니다.
-        return reviewsDataLoader.load(show.id)
+        return reviewsDataLoader.load(show.id) // 3
 
     }
 }

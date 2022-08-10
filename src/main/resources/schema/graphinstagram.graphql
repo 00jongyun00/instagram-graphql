@@ -8,6 +8,8 @@ type Query {
     shows(titleFilter: String): [Show]
     posts: [Post!]
     likedMembersToPost(postId: ID!): [Member!]
+    myFollowers: [Member!]
+    myFollowees: [Member!]
 }
 
 type Mutation {

@@ -37,7 +37,7 @@ class ShowsDataFetcher(private val showsService: ShowsService) {
         if (titleFilter != null) {
             showsService.shows().filter { it.title.contains(titleFilter) }
         } else {
-            showsService.shows()
+            showsService.shows() // 1
         }
     }
 }

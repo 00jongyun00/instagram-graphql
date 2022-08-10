@@ -5,4 +5,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface PostCommentRepository : JpaRepository<PostComment, Long> {
+
+    fun findAllByIdIn(ids: List<Long>): List<PostComment>
 }

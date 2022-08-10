@@ -1,5 +1,6 @@
 package io.jongyun.graphinstagram.service.member
 
+import io.jongyun.graphinstagram.entity.follow.FollowCustomRepository
 import io.jongyun.graphinstagram.entity.follow.FollowRepository
 import io.jongyun.graphinstagram.entity.member.Member
 import io.jongyun.graphinstagram.entity.member.MemberRepository
@@ -19,7 +20,8 @@ import kotlinx.coroutines.withContext
 class FollowServiceTest : BehaviorSpec({
     val memberRepository = mockk<MemberRepository>()
     val followRepository = mockk<FollowRepository>()
-    val followService = FollowService(memberRepository, followRepository)
+    val followCustomRepository = mockk<FollowCustomRepository>()
+    val followService = FollowService(memberRepository, followRepository, followCustomRepository)
 
     lateinit var follower: Member
     lateinit var followee: Member

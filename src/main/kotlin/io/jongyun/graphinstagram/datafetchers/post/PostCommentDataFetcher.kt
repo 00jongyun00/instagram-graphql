@@ -19,6 +19,6 @@ class PostCommentDataFetcher {
             dfe.getDataLoader(PostCommentDataLoader::class.java)
 
         val post: Post = dfe.getSource()
-        return postCommentDataLoader.load(post.id!!.toLong());
+        return postCommentDataLoader.load(post.id.toLong());
     }
 }

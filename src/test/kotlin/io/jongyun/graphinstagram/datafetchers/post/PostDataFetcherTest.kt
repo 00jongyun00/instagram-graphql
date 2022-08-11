@@ -9,10 +9,8 @@ import io.kotest.spring.SpringListener
 import org.hibernate.annotations.common.util.impl.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(classes = [DgsAutoConfiguration::class, GraphInstagramApplication::class])
-@ActiveProfiles("local")
 class PostDataFetcherTest : DescribeSpec() {
 
     @Autowired

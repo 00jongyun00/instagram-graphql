@@ -4,6 +4,7 @@ type Post {
     createdBy: Member!
     content: String!
     postComments: [PostComment!]
+    hashtags: [Hashtag!]
     createdAt: DateTime!
     updatedAt: DateTime!
 }
@@ -11,6 +12,7 @@ type Post {
 """게시물 생성 schema"""
 input CreatePostInput {
     content: String!
+    tags: [String!]
 }
 
 """게시물 Update schema"""

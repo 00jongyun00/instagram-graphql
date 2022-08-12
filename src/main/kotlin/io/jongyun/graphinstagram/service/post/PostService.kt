@@ -1,5 +1,7 @@
 package io.jongyun.graphinstagram.service.post
 
+import io.jongyun.graphinstagram.entity.hashtag.Hashtag
+import io.jongyun.graphinstagram.entity.hashtag.HashtagRepository
 import io.jongyun.graphinstagram.entity.member.Member
 import io.jongyun.graphinstagram.entity.member.MemberRepository
 import io.jongyun.graphinstagram.entity.post.Post
@@ -20,7 +22,8 @@ import io.jongyun.graphinstagram.types.Post as TypesPost
 class PostService(
     private val postRepository: PostRepository,
     private val memberRepository: MemberRepository,
-    private val postCustomRepository: PostCustomRepository
+    private val postCustomRepository: PostCustomRepository,
+    private val hashTagRepository: HashtagRepository
 ) {
 
     fun createPost(memberId: Long, createPostInput: CreatePostInput): Boolean {
@@ -30,9 +33,12 @@ class PostService(
             createdBy = member,
             content = createPostInput.content
         )
+        val hashtagList = getHashtagList(createPostInput.tags ?: emptyList())
+        post.addAllHashTag(hashtagList)
         postRepository.save(post)
         return true
     }
+
 
     @Transactional(readOnly = true)
     fun getPost(postId: Long): TypesPost {
@@ -101,6 +107,22 @@ class PostService(
             ErrorCode.POST_DOES_NOT_EXISTS,
             "게시물을 찾을 수 없습니다. ID: $postId"
         )
+    }
+
+    private fun getHashtagList(tags: List<String>): List<Hashtag> {
+        if (tags.isEmpty()) {
+            return emptyList()
+        }
+
+        val hashtags = hashTagRepository.findAllByTagNameIn(tags)
+        val tagNames = hashtags.map { it.tagName }
+        return tags.map { tag ->
+            if (tagNames.contains(tag)) {
+                hashtags.first { it.tagName == tag }
+            } else {
+                Hashtag(tagName = tag)
+            }
+        }
     }
 
 }

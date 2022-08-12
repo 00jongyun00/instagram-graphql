@@ -16,7 +16,7 @@ import javax.persistence.Table
 class PostHashtag(
     @ManyToOne(fetch = LAZY, cascade = [CascadeType.REMOVE])
     val post: Post,
-    @ManyToOne(fetch = LAZY, cascade = [CascadeType.REMOVE])
+    @ManyToOne(fetch = LAZY, cascade = [CascadeType.ALL])
     val hashtag: Hashtag
 ) {
 

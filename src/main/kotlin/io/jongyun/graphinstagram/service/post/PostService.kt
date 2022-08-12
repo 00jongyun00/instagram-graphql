@@ -10,6 +10,7 @@ import io.jongyun.graphinstagram.entity.post.PostRepository
 import io.jongyun.graphinstagram.exception.BusinessException
 import io.jongyun.graphinstagram.exception.ErrorCode
 import io.jongyun.graphinstagram.types.CreatePostInput
+import io.jongyun.graphinstagram.types.PostPageInput
 import io.jongyun.graphinstagram.types.UpdatePostInput
 import io.jongyun.graphinstagram.util.mapToGraphql
 import org.springframework.stereotype.Service
@@ -83,6 +84,15 @@ class PostService(
         )
         postRepository.delete(post)
         return true
+    }
+
+    @Transactional(readOnly = true)
+    fun findAllByHashtag(hashtag: String, postPageInput: PostPageInput): List<Post> {
+        val hashtag = hashTagRepository.findByTagName(hashtag) ?: throw BusinessException(
+            ErrorCode.HASHTAG_DOES_NOT_EXISTS,
+            "해시태그를 찾을 수 없습니다."
+        )
+        return postCustomRepository.findAllByHashtag(hashtag, postPageInput)
     }
 
 

@@ -20,3 +20,8 @@ input UpdatePostInput {
     postId: ID!
     content: String!
 }
+
+input PostPageInput {
+    page_size: Int!
+    page: Int!
+}

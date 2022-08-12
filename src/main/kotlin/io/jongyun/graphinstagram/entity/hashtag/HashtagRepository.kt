@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository
 interface HashtagRepository : JpaRepository<Hashtag, Long> {
 
     fun findAllByTagNameIn(tagNames: List<String>): List<Hashtag>
+
+    fun findByTagName(tagName: String): Hashtag?
 }

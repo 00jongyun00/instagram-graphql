@@ -2,8 +2,17 @@ package io.jongyun.graphinstagram.entity.post
 
 import io.jongyun.graphinstagram.entity.common.BaseTimeEntity
 import io.jongyun.graphinstagram.entity.member.Member
-import javax.persistence.*
+import javax.persistence.CascadeType
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.FetchType.EAGER
 import javax.persistence.FetchType.LAZY
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
+import javax.persistence.Table
 
 @Entity
 @Table(name = "post_comment")
@@ -21,7 +30,7 @@ class PostComment(
     @JoinColumn(name = "post_id")
     var post: Post? = null
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "created_by_id")
     var createdBy: Member? = null
 }

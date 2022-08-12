@@ -3,6 +3,7 @@ package io.jongyun.graphinstagram.service.post
 import io.jongyun.graphinstagram.entity.member.Member
 import io.jongyun.graphinstagram.entity.member.MemberRepository
 import io.jongyun.graphinstagram.entity.post.Post
+import io.jongyun.graphinstagram.entity.post.PostCustomRepository
 import io.jongyun.graphinstagram.entity.post.PostRepository
 import io.jongyun.graphinstagram.exception.BusinessException
 import io.jongyun.graphinstagram.exception.ErrorCode
@@ -18,7 +19,8 @@ import io.jongyun.graphinstagram.types.Post as TypesPost
 @Service
 class PostService(
     private val postRepository: PostRepository,
-    private val memberRepository: MemberRepository
+    private val memberRepository: MemberRepository,
+    private val postCustomRepository: PostCustomRepository
 ) {
 
     fun createPost(memberId: Long, createPostInput: CreatePostInput): Boolean {
@@ -47,6 +49,12 @@ class PostService(
     @Transactional(readOnly = true)
     fun getAll(): List<TypesPost> {
         return postRepository.findAll().map { mapToGraphql(it) }
+    }
+
+    @Transactional(readOnly = true)
+    fun getAllMyLikedPostByMemberId(memberId: Long): List<TypesPost> {
+        return postCustomRepository.findAllMyLikedPostByMember(findMemberById(memberId))
+            .map { mapToGraphql(it) }
     }
 
     fun updatePost(memberId: Long, updatePostInput: UpdatePostInput): Boolean {

@@ -1,4 +1,4 @@
-package io.jongyun.graphinstagram.batch
+package io.jongyun.graphinstagram.batch.example
 
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
@@ -11,29 +11,32 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class HelloJobConfiguration(
-    val jobBuilderFactory: JobBuilderFactory, val stepBuilderFactory: StepBuilderFactory
+class JobInstanceConfiguration(
+    val jobBuilderFactory: JobBuilderFactory,
+    val stepBuilderFactory: StepBuilderFactory
 ) {
 
     @Bean
-    fun helloJob(): Job {
-        return jobBuilderFactory.get("helloJob").start(helloStep1()).next(helloStep2()).build()
+    fun job(): Job {
+        return jobBuilderFactory.get("job")
+            .start(step1())
+            .next(step2())
+            .build()
     }
 
     @Bean
-    fun helloStep1(): Step {
+    fun step1(): Step {
         return stepBuilderFactory.get("helloStep1").tasklet { _: StepContribution, _: ChunkContext ->
-                println("hello step1")
-                RepeatStatus.FINISHED
-            }.build()
+            println("hello step1")
+            RepeatStatus.FINISHED
+        }.build()
     }
 
     @Bean
-    fun helloStep2(): Step {
+    fun step2(): Step {
         return stepBuilderFactory.get("helloStep2").tasklet { _: StepContribution, _: ChunkContext ->
-                println("hello step2")
-                RepeatStatus.FINISHED
-            }.build()
+            println("hello step2")
+            RepeatStatus.FINISHED
+        }.build()
     }
-
 }

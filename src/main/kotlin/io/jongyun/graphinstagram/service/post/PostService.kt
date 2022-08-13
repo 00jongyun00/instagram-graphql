@@ -1,5 +1,7 @@
 package io.jongyun.graphinstagram.service.post
 
+import io.jongyun.graphinstagram.entity.hashtag.Hashtag
+import io.jongyun.graphinstagram.entity.hashtag.HashtagRepository
 import io.jongyun.graphinstagram.entity.member.Member
 import io.jongyun.graphinstagram.entity.member.MemberRepository
 import io.jongyun.graphinstagram.entity.post.Post
@@ -8,6 +10,7 @@ import io.jongyun.graphinstagram.entity.post.PostRepository
 import io.jongyun.graphinstagram.exception.BusinessException
 import io.jongyun.graphinstagram.exception.ErrorCode
 import io.jongyun.graphinstagram.types.CreatePostInput
+import io.jongyun.graphinstagram.types.PostPageInput
 import io.jongyun.graphinstagram.types.UpdatePostInput
 import io.jongyun.graphinstagram.util.mapToGraphql
 import org.springframework.stereotype.Service
@@ -20,7 +23,8 @@ import io.jongyun.graphinstagram.types.Post as TypesPost
 class PostService(
     private val postRepository: PostRepository,
     private val memberRepository: MemberRepository,
-    private val postCustomRepository: PostCustomRepository
+    private val postCustomRepository: PostCustomRepository,
+    private val hashTagRepository: HashtagRepository
 ) {
 
     fun createPost(memberId: Long, createPostInput: CreatePostInput): Boolean {
@@ -30,9 +34,12 @@ class PostService(
             createdBy = member,
             content = createPostInput.content
         )
+        val hashtagList = getHashtagList(createPostInput.tags ?: emptyList())
+        post.addAllHashTag(hashtagList)
         postRepository.save(post)
         return true
     }
+
 
     @Transactional(readOnly = true)
     fun getPost(postId: Long): TypesPost {
@@ -79,6 +86,15 @@ class PostService(
         return true
     }
 
+    @Transactional(readOnly = true)
+    fun findAllByHashtag(hashtag: String, postPageInput: PostPageInput): List<Post> {
+        val hashtag = hashTagRepository.findByTagName(hashtag) ?: throw BusinessException(
+            ErrorCode.HASHTAG_DOES_NOT_EXISTS,
+            "해시태그를 찾을 수 없습니다."
+        )
+        return postCustomRepository.findAllByHashtag(hashtag, postPageInput)
+    }
+
 
     private fun contentValidation(content: String) {
         when {
@@ -101,6 +117,22 @@ class PostService(
             ErrorCode.POST_DOES_NOT_EXISTS,
             "게시물을 찾을 수 없습니다. ID: $postId"
         )
+    }
+
+    private fun getHashtagList(tags: List<String>): List<Hashtag> {
+        if (tags.isEmpty()) {
+            return emptyList()
+        }
+
+        val hashtags = hashTagRepository.findAllByTagNameIn(tags)
+        val tagNames = hashtags.map { it.tagName }
+        return tags.map { tag ->
+            if (tagNames.contains(tag)) {
+                hashtags.first { it.tagName == tag }
+            } else {
+                Hashtag(tagName = tag)
+            }
+        }
     }
 
 }

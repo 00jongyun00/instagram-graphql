@@ -11,6 +11,7 @@ import io.jongyun.graphinstagram.service.post.PostService
 import io.jongyun.graphinstagram.types.CreatePostInput
 import io.jongyun.graphinstagram.types.Member
 import io.jongyun.graphinstagram.types.Post
+import io.jongyun.graphinstagram.types.PostPageInput
 import io.jongyun.graphinstagram.types.UpdatePostInput
 import io.jongyun.graphinstagram.util.getAuthName
 import io.jongyun.graphinstagram.util.mapToGraphql
@@ -45,6 +46,13 @@ class PostDataFetcher(
     @DgsData(parentType = DgsConstants.Mutation_TYPE, field = DgsConstants.MUTATION.PostUpdate)
     fun updatePost(@InputArgument updatePostInput: UpdatePostInput): Boolean {
         return postService.updatePost(getAuthName(), updatePostInput)
+    }
+
+    @DgsQuery(field = DgsConstants.QUERY.GetPostsByHashtag)
+    fun getPostsByHashtag(
+        @InputArgument(value = "tag_name") hashtag: String, @InputArgument postPageInput: PostPageInput
+    ): List<Post> {
+        return postService.findAllByHashtag(hashtag, postPageInput).map { mapToGraphql(it) };
     }
 
     @DgsData(parentType = DgsConstants.MEMBER.TYPE_NAME, field = DgsConstants.MEMBER.Posts)

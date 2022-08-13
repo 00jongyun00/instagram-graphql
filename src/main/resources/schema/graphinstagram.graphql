@@ -3,13 +3,14 @@ scalar DateTime
 type Query {
     me: Member!
     getPost(postId: ID!): Post!
-    myPostList: [Post!]
+    myPostList(postPageInput: PostPageInput!): [Post!]
     myLikedPostList: [Post!]
     shows(titleFilter: String): [Show]
-    posts: [Post!]
+    posts(postPageInput: PostPageInput!): [Post!]
     likedMembersToPost(postId: ID!): [Member!]
     myFollowers: [Member!]
     myFollowees: [Member!]
+    getPostsByHashtag(tag_name: String!, postPageInput: PostPageInput!): [Post!]
 }
 
 type Mutation {

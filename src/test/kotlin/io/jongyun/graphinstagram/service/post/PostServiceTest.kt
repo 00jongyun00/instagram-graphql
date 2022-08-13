@@ -1,9 +1,11 @@
 package io.jongyun.graphinstagram.service.post
 
 import com.github.javafaker.Faker
+import io.jongyun.graphinstagram.entity.hashtag.HashtagRepository
 import io.jongyun.graphinstagram.entity.member.Member
 import io.jongyun.graphinstagram.entity.member.MemberRepository
 import io.jongyun.graphinstagram.entity.post.Post
+import io.jongyun.graphinstagram.entity.post.PostCustomRepository
 import io.jongyun.graphinstagram.entity.post.PostRepository
 import io.jongyun.graphinstagram.exception.BusinessException
 import io.jongyun.graphinstagram.exception.ErrorCode
@@ -30,7 +32,9 @@ val faker = Faker()
 class PostServiceTest : BehaviorSpec({
     val postRepository: PostRepository = mockk()
     val memberRepository: MemberRepository = mockk()
-    val postService = PostService(postRepository, memberRepository)
+    val postCustomRepository: PostCustomRepository = mockk()
+    val hashtagRepository: HashtagRepository = mockk()
+    val postService = PostService(postRepository, memberRepository, postCustomRepository, hashtagRepository)
     lateinit var member: Member
     lateinit var post: Post
     lateinit var updatePostInput: UpdatePostInput
@@ -53,10 +57,12 @@ class PostServiceTest : BehaviorSpec({
     }
 
     given("post content 가 있어서") {
-        val createPostInput = CreatePostInput(content = "테스트 컨텐츠")
+        val hashtagList = listOf("#안녕", "#테스트")
+        val createPostInput = CreatePostInput(content = "테스트 컨텐츠", tags = hashtagList)
         Then("성공한다.") {
             every { memberRepository.findById(1L) } returns Optional.of(member)
             every { postRepository.save(any()) } returns post
+            every { hashtagRepository.findAllByTagNameIn(hashtagList) } returns emptyList()
             postService.createPost(1L, createPostInput) shouldBe true
         }
     }

@@ -23,12 +23,21 @@ class JobInstanceConfiguration(
             .next(step2())
             .build()
     }
+
     @Bean
     fun step1(): Step {
-        return stepBuilderFactory.get("helloStep1").tasklet { _: StepContribution, _: ChunkContext ->
-            println("hello step1")
-            RepeatStatus.FINISHED
-        }.build()
+        return stepBuilderFactory.get("helloStep1")
+            .tasklet { stepContribution: StepContribution, chunkContext: ChunkContext ->
+                val jobParametersByChunk = chunkContext.stepContext.jobParameters
+                val jobParameters = stepContribution.stepExecution.jobExecution.jobParameters
+                val name = jobParameters.getString("name")
+                val id = jobParameters.getLong("id")
+                val date = jobParameters.getDate("date")
+                val weight = jobParameters.getDouble("weight")
+                println("name: $name, id: $id, date: $date, weight: $weight")
+
+                RepeatStatus.FINISHED
+            }.build()
     }
 
     @Bean

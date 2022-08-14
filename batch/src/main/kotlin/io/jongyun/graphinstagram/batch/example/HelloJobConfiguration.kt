@@ -23,17 +23,17 @@ class HelloJobConfiguration(
     @Bean
     fun helloStep1(): Step {
         return stepBuilderFactory.get("helloStep1").tasklet { _: StepContribution, _: ChunkContext ->
-                println("hello step1")
-                RepeatStatus.FINISHED
-            }.build()
+            println("hello step1")
+            RepeatStatus.FINISHED
+        }.build()
     }
 
     @Bean
     fun helloStep2(): Step {
         return stepBuilderFactory.get("helloStep2").tasklet { _: StepContribution, _: ChunkContext ->
-                println("hello step2")
-                RepeatStatus.FINISHED
-            }.build()
+            println("hello step2")
+            RepeatStatus.FINISHED
+        }.build()
     }
 
 }

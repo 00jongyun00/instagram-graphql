@@ -23,7 +23,6 @@ class JobInstanceConfiguration(
             .next(step2())
             .build()
     }
-
     @Bean
     fun step1(): Step {
         return stepBuilderFactory.get("helloStep1").tasklet { _: StepContribution, _: ChunkContext ->
